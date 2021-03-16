@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Salle de Cinema </title>
+
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+
+<body>
+
+
+<header>Description projet Salle de Cinema</header>
+
+<nav>
+<!--    titre de ma Nav-->
+    <h1> Menu </h1>
+   <ul>
+<!--       <li> description</li>-->
+
+       <li><a href="#La description du probleme"> Description </a></li>
+       <li><a href="#Conception"> Conception </a></li>
+       <li><a href="#Codage"> Code </a></li>
+       <li><a href="#Resultat"> Résultat </a></li>
+
+
+   </ul>
+</nav>
+
+<main>
+<!--    <h1 id="il-faut-aller-ici">Le titre de mon article</h1>-->
+    <h2 id="La description du probleme">La description du probleme </h2>
+    <p>
+
+     Pour la sortie de Retour Vers Le Futur 4, les cinéma Gaumont/Pathé vous demandent de mettre au point un logiciel
+        simple en mode console (eh oui, MacFly, on revient en 1980) pour permettre aux utilisateurs de choisir des
+        places de cinéma dans une salle.
+
+        Les utilisateurs doivent pouvoir spécifier la rangée dans laquelle ils veulent être placés ainsi que le nombre
+        de place à réserver.
+
+        Une fois la rangée choisie et le nombre de places spécifiés, vous devez vérifier s'il y a effectivement assez de place sur la rangée, si tel est le cas, vous affichez la salle à l'utilisateur et proposez une nouvelle saisie.
+        Sinon, vous spécifiez à l'utilisateur qu'il n'y a plus de place sur la rangée ou qu'il n'y en a pas assez.
+
+    </p>
+
+    <hr>
+
+    <h2 id="Conception"> Conception </h2>
+
+    <div class="side-by-side">
+    <div style="padding:20px">
+    <h4> Etape 1:</h4>
+        <section>Initialiser toutes les rangées par des place vides de la salle de cinéma.</section>
+        <section>Créer une fonction pour verifier si le numero de rangé existe et renvoie le num de ligne (la rangée).
+        </section>
+        <section>Choisir une rangée et utliser la fonction precedante.</section>
+    </div>
+
+    <div style="padding:20px">
+        <h4> Etape 2:</h4>
+        <section> Choisir un nombre de places.</section>
+        <section>Créer une fonction qui retourne le nombre de places libres</section>
+        <section>Verifier s'il ya assez de places disponible sur la rangée choisie:</section>
+        <section>si oui afficher le tableau remplie avec les places prise et enchainer avec la question pour un nouveau
+            client.
+        </section>
+        <section>Si non reposer la question de choix de rangée et de nombre de places.</section>
+    </div>
+    </div>
+
+
+<!--    le <hr> permet de tracer une ligne séparatrice-->
+    <hr>
+
+
+    <h2 id="Codage">Codage </h2>
+
+    <div id="mon-code">
+    <pre>
+        <!--    /*  respecte les styles que j'ai affiché */-->
+    <code>
+        package com.company;
+
+
+        import java.util.Scanner;
+
+        public class SalleCinema {
+
+        public static void main(String[] args) {
+        // les attributs
+
+        char placePrise = 'X';
+        int nbRang = 7; // nombre de rangées
+        int nbPlace = 9; // nombre de palces
+        char[][] salle = new char[nbRang][nbPlace];
+        Scanner sc = new Scanner(System.in);
+
+        int placeLibre;
+
+        // initiatlisation des place vides des la salle
+        for (int l = 0; l != salle.length; ++l) {
+        for (int c = 0; c != salle[l].length; ++c) {
+        salle[l][c] = '-';
+        }
+        }
+
+        //la rangée choisie et le nombre de places spécifiés
+
+
+        do {
+        placeLibre = 0;
+        int compteur = 0;
+        int row = isRange(sc, nbRang);// le numero de la rangée choisie
+        int places = FreePlace(salle, row);/// nombre de place restante sur la rangée
+
+        System.out.println("combien de places souhaitez vous:");
+        int nbPlaces = sc.nextInt();
+        sc.nextLine();
+
+        if (nbPlaces > places) {// on verifie s'il ya assez de places
+        System.out.println("il n'y a plus de place sur la rangée");
+        } else {
+
+
+        // attibution de places //on cherche la 1er place libre
+        for (int j = 0; j < salle[row].length && compteur != nbPlaces; j++) {
+        if (salle[row][j] == '-') {// je cherche une place vide
+        salle[row][j] = 'X';// j'aloue la place
+        compteur = compteur + 1;
+        }
+        }
+
+
+        // afficher le tableau
+        for (int l = 0; l != salle.length; ++l) {
+        System.out.print(l+" | ");
+        for (int c = 0; c != salle[l].length; ++c) {
+
+        System.out.print("["+ salle[l][c] + "] ");
+        }
+        System.out.println();
+        }
+
+
+        //nombre total de places libre
+
+        for (int p = 0; p != nbRang; p++) {
+        for (int j = 0; j != salle[0].length; j++) {
+        if (salle[p][j] == '-') {
+        placeLibre = placeLibre + 1;
+        }
+
+
+        }
+
+        }
+        System.out.println("nombre de place restante est de : " + placeLibre);
+
+
+        }
+
+        } while (placeLibre != 0);
+
+        }
+
+
+        //fonction qui retourne le nombre de place libre sur la rangée choisie
+        private static int FreePlace(char[][] salle, int numRang) {
+        int res = 0;
+        for (int j = 0; j != salle[numRang].length; j++) {
+        res = ((salle[numRang][j] == '-') ? ++res : res);
+        }
+        return res;
+        }
+
+
+        //fonction pour verifier si le numero de rangé existe et renvoie le num de ligne (la rangée)
+        private static int isRange(Scanner sc, int nbRang) {
+        boolean isvalid = false;
+        int res = 0;
+
+        do {
+        System.out.println("veuillez choisir la rangée de 0 à 6:");
+        int row = sc.nextInt();
+        sc.nextLine();
+        if (row > nbRang - 1) { // on verifie si la rangé saisie est plus que le nombre total de rangées
+        System.err.println("le numero saisie est incorrect!");
+
+        } else {
+        isvalid = true;
+        res = row;
+
+        }
+        } while (!isvalid);
+
+        return res;
+        }
+
+
+        }
+    </code>
+    </pre>
+
+        <h2 id="Resultat"> Resultat </h2>
+
+
+
+        <p>
+        <img class="fit-picture"
+             src="image java salle de cinéma.png"
+             alt="Image de la salle de cinéma">
+    </p>
+
+</div>
+</main>
+
+
+<footer> projet java sur les tableaux</footer>
+</body>
+
+
+</html>
